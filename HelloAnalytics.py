@@ -75,6 +75,22 @@ def print_results(results):
     else:
         print ('No results found')
 
+def get_users_results(service, profile_id):
+    # Use the Analytics Service Object to query the Core Reporting API
+    # for the number of sessions within the past seven days.
+    print('view_id:', profile_id)
+    # 獲取一周的每日訪問用戶數
+    return service.data().ga().get(
+            ids='ga:' + profile_id, 
+            start_date='7daysAgo',
+            end_date='today',
+            metrics='ga:users',
+            dimensions='ga:date').execute()
+
+def print_users_results(results):
+    # Print data nicely for the user.
+    print (results['rows'])
+
 
 def main():
     # Define the auth scopes to request.
@@ -90,6 +106,8 @@ def main():
 
     profile_id = get_first_profile_id(service)
     print_results(get_results(service, profile_id))
+    print ('------------')
+    print_users_results(get_users_results(service, profile_id))
 
 
 if __name__ == '__main__':
